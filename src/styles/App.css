@@ -1,1 +1,22 @@
+.add_tasks_section {
+  margin-bottom: 20px;
+}
+
+.tasks_section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+button.edit,
+button.delete,
+button.save {
+  cursor: pointer;
+}
 
