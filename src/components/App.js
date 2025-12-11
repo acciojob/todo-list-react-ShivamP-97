@@ -3,91 +3,76 @@ import "../styles/App.css";
 
 class App extends Component {
   state = {
-    tasks: [],
-    currentTask: "",
-    editIndex: null,
-    editText: "",
+    newTask: "",
+    tasks: [], 
   };
 
-  handleInputChange = (e) => {
-    this.setState({ currentTask: e.target.value });
+  handleChange = (e) => {
+    this.setState({ newTask: e.target.value });
   };
 
   addTask = () => {
-    const { currentTask, tasks } = this.state;
-    if (currentTask.trim() === "") return;
+    const { newTask, tasks } = this.state;
+    if (newTask.trim() === "") return;
     this.setState({
-      tasks: [...tasks, currentTask],
-      currentTask: "",
+      tasks: [...tasks, { text: newTask, isEditing: false }],
+      newTask: "",
     });
   };
 
   deleteTask = (index) => {
-    const { tasks } = this.state;
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    this.setState({ tasks: updatedTasks });
+    const tasks = [...this.state.tasks];
+    tasks.splice(index, 1);
+    this.setState({ tasks });
   };
 
   editTask = (index) => {
-    this.setState({
-      editIndex: index,
-      editText: this.state.tasks[index],
-    });
+    const tasks = [...this.state.tasks];
+    tasks[index].isEditing = true;
+    this.setState({ tasks });
   };
 
-  handleEditChange = (e) => {
-    this.setState({ editText: e.target.value });
+  handleEditChange = (e, index) => {
+    const tasks = [...this.state.tasks];
+    tasks[index].text = e.target.value;
+    this.setState({ tasks });
   };
 
-  saveTask = () => {
-    const { editIndex, editText, tasks } = this.state;
-    if (editText.trim() === "") return;
-    const updatedTasks = tasks.map((task, i) =>
-      i === editIndex ? editText : task
-    );
-    this.setState({
-      tasks: updatedTasks,
-      editIndex: null,
-      editText: "",
-    });
+  saveTask = (index) => {
+    const tasks = [...this.state.tasks];
+    tasks[index].isEditing = false;
+    this.setState({ tasks });
   };
 
   render() {
-    const { tasks, currentTask, editIndex, editText } = this.state;
-
     return (
-      <div className="App">
+      <div>
         <h1>To-Do App</h1>
-
-        {/* Add Task Section */}
         <div className="add_tasks_section">
-          <input
-            type="text"
-            value={currentTask}
-            onChange={this.handleInputChange}
+          <textarea
             placeholder="Enter task"
-          />
-          <button onClick={this.addTask}>Add Task</button>
+            value={this.state.newTask}
+            onChange={this.handleChange}
+          ></textarea>
+          <button onClick={this.addTask}>Add</button>
         </div>
 
-        {/* Tasks List */}
         <div className="tasks_section">
-          {tasks.map((task, index) => (
+          {this.state.tasks.map((task, index) => (
             <div className="task" key={index}>
-              {editIndex === index ? (
+              {task.isEditing ? (
                 <>
-                  <input
-                    type="text"
-                    value={editText}
-                    onChange={this.handleEditChange}
-                  />
-                  <button className="save" onClick={this.saveTask}>
+                  <textarea
+                    value={task.text}
+                    onChange={(e) => this.handleEditChange(e, index)}
+                  ></textarea>
+                  <button className="save" onClick={() => this.saveTask(index)}>
                     Save
                   </button>
                 </>
               ) : (
                 <>
-                  <span>{task}</span>
+                  <span>{task.text}</span>
                   <button className="edit" onClick={() => this.editTask(index)}>
                     Edit
                   </button>
