@@ -4,7 +4,7 @@ import "../styles/App.css";
 class App extends Component {
   state = {
     newTask: "",
-    tasks: [], 
+    tasks: [],
   };
 
   handleChange = (e) => {
@@ -49,6 +49,7 @@ class App extends Component {
       <div>
         <h1>To-Do App</h1>
         <div className="add_tasks_section">
+          <h3>Add New Task</h3> {/* h3 */}
           <textarea
             placeholder="Enter task"
             value={this.state.newTask}
@@ -72,7 +73,7 @@ class App extends Component {
                 </>
               ) : (
                 <>
-                  <span>{task.text}</span>
+                  <h3>{task.text}</h3> {/* h3*/}
                   <button className="edit" onClick={() => this.editTask(index)}>
                     Edit
                   </button>
