@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "../styles/App.css";
+import "../styles/App.css"; 
 
 class App extends Component {
   state = {
@@ -47,9 +47,9 @@ class App extends Component {
   render() {
     return (
       <div>
-        <h1>To-Do App</h1>
+        {/* Add Task Section */}
         <div className="add_tasks_section">
-          <h3>Add New Task</h3> {/* h3 */}
+          <h3>Add New Task</h3>
           <textarea
             placeholder="Enter task"
             value={this.state.newTask}
@@ -58,6 +58,7 @@ class App extends Component {
           <button onClick={this.addTask}>Add</button>
         </div>
 
+        {/* Tasks Section */}
         <div className="tasks_section">
           {this.state.tasks.map((task, index) => (
             <div className="task" key={index}>
@@ -67,14 +68,20 @@ class App extends Component {
                     value={task.text}
                     onChange={(e) => this.handleEditChange(e, index)}
                   ></textarea>
-                  <button className="save" onClick={() => this.saveTask(index)}>
+                  <button
+                    className="save"
+                    onClick={() => this.saveTask(index)}
+                  >
                     Save
                   </button>
                 </>
               ) : (
                 <>
-                  <h3>{task.text}</h3> {/* h3*/}
-                  <button className="edit" onClick={() => this.editTask(index)}>
+                  <h3>{task.text}</h3>
+                  <button
+                    className="edit"
+                    onClick={() => this.editTask(index)}
+                  >
                     Edit
                   </button>
                   <button
