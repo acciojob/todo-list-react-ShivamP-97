@@ -1,103 +1,81 @@
-import React, { Component } from "react";
-import "../styles/App.css"; 
+import React from "react";
+import "./../styles/App.css";
+import { useState } from "react";
 
-class App extends Component {
-  state = {
-    newTask: "",
-    tasks: [],
-  };
+const App = () => {
+  const [item, Setitem] = useState([]);
+  const [value, Setvalue] = useState("");
+  const [editIndex, setEditIndex] = useState(null);
+  const [editValue, setEditValue] = useState("");
 
-  handleChange = (e) => {
-    this.setState({ newTask: e.target.value });
-  };
+  function handleDelete(i) {
+    return item.filter((elem, index) => index !== i);
+  }
 
-  addTask = () => {
-    const { newTask, tasks } = this.state;
-    if (newTask.trim() === "") return;
-    this.setState({
-      tasks: [...tasks, { text: newTask, isEditing: false }],
-      newTask: "",
-    });
-  };
+  function handleEdit(i) {
+    setEditIndex(i);
+    setEditValue(item[i]);
+  }
 
-  deleteTask = (index) => {
-    const tasks = [...this.state.tasks];
-    tasks.splice(index, 1);
-    this.setState({ tasks });
-  };
+  function saveTask(i) {
+    let updated = [...item];
+    updated[i] = editValue;
+    Setitem(updated);
+    setEditIndex(null);
+  }
 
-  editTask = (index) => {
-    const tasks = [...this.state.tasks];
-    tasks[index].isEditing = true;
-    this.setState({ tasks });
-  };
+  return (
+    <div>
+      <div className="add_tasks_section" style={{ textAlign: "center" }}>
+        <h3>To Do List</h3>
+        <textarea
+          placeholder="Enter The Todos"
+          value={value}
+          onChange={(e) => Setvalue(e.target.value)}
+        />
+        <button onClick={() => Setitem([...item, value])}>Add Todo</button>
+      </div>
 
-  handleEditChange = (e, index) => {
-    const tasks = [...this.state.tasks];
-    tasks[index].text = e.target.value;
-    this.setState({ tasks });
-  };
+      <div className="tasks_section">
+        {item.length > 0 && (
+          <ul>
+            {item.map((elem, index) => (
+              <React.Fragment key={index}>
+                <li className="task">
+                  {editIndex === index ? (
+                    <textarea
+                      value={editValue}
+                      onChange={(e) => setEditValue(e.target.value)}
+                    />
+                  ) : (
+                    elem
+                  )}
+                </li>
 
-  saveTask = (index) => {
-    const tasks = [...this.state.tasks];
-    tasks[index].isEditing = false;
-    this.setState({ tasks });
-  };
-
-  render() {
-    return (
-      <div>
-        {/* Add Task Section */}
-        <div className="add_tasks_section">
-          <h3>Add New Task</h3>
-          <textarea
-            placeholder="Enter task"
-            value={this.state.newTask}
-            onChange={this.handleChange}
-          ></textarea>
-          <button onClick={this.addTask}>Add</button>
-        </div>
-
-        {/* Tasks Section */}
-        <div className="tasks_section">
-          {this.state.tasks.map((task, index) => (
-            <div className="task" key={index}>
-              {task.isEditing ? (
-                <>
-                  <textarea
-                    value={task.text}
-                    onChange={(e) => this.handleEditChange(e, index)}
-                  ></textarea>
-                  <button
-                    className="save"
-                    onClick={() => this.saveTask(index)}
-                  >
+                {editIndex === index ? (
+                  <button className="save" onClick={() => saveTask(index)}>
                     Save
                   </button>
-                </>
-              ) : (
-                <>
-                  <h3>{task.text}</h3>
-                  <button
-                    className="edit"
-                    onClick={() => this.editTask(index)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="delete"
-                    onClick={() => this.deleteTask(index)}
-                  >
-                    Delete
-                  </button>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
+                ) : (
+                  <>
+                    <button className="edit" onClick={() => handleEdit(index)}>
+                      Edit
+                    </button>
+                    <button
+                      className="delete"
+                      onClick={() => Setitem(handleDelete(index))}
+                    >
+                      Delete
+                    </button>
+                  </>
+                )}
+              </React.Fragment>
+            ))}
+          </ul>
+        )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default App;
